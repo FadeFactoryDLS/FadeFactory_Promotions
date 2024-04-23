@@ -1,6 +1,7 @@
 interface promotionModel {
   promotionId: Number;
-  promotionName: String;
+  accountName: String;
+  promotionSubject: String;
   promotionDescription: String;
   promotionReceivers: Array<String>;
 }

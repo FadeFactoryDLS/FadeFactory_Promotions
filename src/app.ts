@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import axios from "axios";
 import Promotion from "./models/promotionModel";
+import { json } from "stream/consumers";
 
 const app: Express = express();
 const port = 8080;
@@ -12,12 +13,7 @@ dotenv.config();
 const emailApiUrl = process.env.EMAIL_API_URL as string;
 
 app.post("/promotion", async (req: Request, res: Response) => {
-  const promotion: Promotion = {
-    promotionId: req.body.promotionId,
-    promotionName: req.body.promotionName,
-    promotionDescription: req.body.promotionDescription,
-    promotionReceivers: req.body.promotionReceivers,
-  };
+  const promotion: Promotion = req.body;
 
   if (promotion) {
     for (let i = 0; i < promotion.promotionReceivers.length; i++) {
@@ -25,8 +21,9 @@ app.post("/promotion", async (req: Request, res: Response) => {
         await axios.post(
           `${emailApiUrl}/send-mail/promotion`,
           {
-            email: promotion.promotionReceivers[i],
-            subject: promotion.promotionName,
+            emailAddress: promotion.promotionReceivers[i],
+            name: promotion.accountName,
+            subject: promotion.promotionSubject,
             message: promotion.promotionDescription,
           },
           {
@@ -37,7 +34,7 @@ app.post("/promotion", async (req: Request, res: Response) => {
         );
       } catch (error) {
         console.error(error);
-        break;
+        return;
       }
     }
   }
