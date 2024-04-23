@@ -23,7 +23,7 @@ app.post("/promotion", async (req: Request, res: Response) => {
     for (let i = 0; i < promotion.promotionReceivers.length; i++) {
       try {
         await axios.post(
-          emailApiUrl,
+          `${emailApiUrl}/send-mail/promotion`,
           {
             email: promotion.promotionReceivers[i],
             subject: promotion.promotionName,
