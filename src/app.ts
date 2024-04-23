@@ -37,10 +37,12 @@ app.post("/promotion", async (req: Request, res: Response) => {
         );
       } catch (error) {
         console.error(error);
+        break;
       }
     }
   }
-  res.status(200).send("OK");
+  console.log(`Email sent to ${promotion.promotionReceivers.length} receivers`);
+  res.sendStatus(200);
 });
 
 app.listen(port, () => {
