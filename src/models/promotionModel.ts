@@ -1,9 +1,8 @@
 interface promotionModel {
   promotionId: Number;
-  accountName: String;
   promotionSubject: String;
   promotionDescription: String;
-  promotionReceivers: Array<String>;
+  promotionReceivers: Array<{ email: String; name: String }>;
 }
 
 export default promotionModel;

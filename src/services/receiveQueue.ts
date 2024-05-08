@@ -1,11 +1,11 @@
 import {
-  delay,
   ProcessErrorArgs,
   ServiceBusClient,
-  ServiceBusMessage,
   ServiceBusReceivedMessage,
 } from "@azure/service-bus";
 import dotenv from "dotenv";
+import { Stream } from "stream";
+import Promotion from "../models/promotionModel";
 
 dotenv.config();
 const connectionString = process.env
@@ -13,7 +13,12 @@ const connectionString = process.env
 
 const queueName = process.env.SERVICE_BUS_QUEUE_NAME as string;
 
-export const receiveQueue = async () => {
+export function receiveQueue(
+  cb: (err: Error | null, promotionStream: Stream) => void
+): void {
+  const promotionStream = new Stream();
+  cb(null, promotionStream);
+
   const sbClient = new ServiceBusClient(connectionString);
 
   const receiver = sbClient.createReceiver(queueName);
@@ -21,7 +26,7 @@ export const receiveQueue = async () => {
   const myMessageHandler = async (
     messageReceived: ServiceBusReceivedMessage
   ) => {
-    console.log(`Received message: ${messageReceived.body}`);
+    promotionStream.emit("data", messageReceived.body.data);
   };
 
   const myErrorHandler = async (error: ProcessErrorArgs) => {
@@ -32,4 +37,4 @@ export const receiveQueue = async () => {
     processMessage: myMessageHandler,
     processError: myErrorHandler,
   });
-};
+}
