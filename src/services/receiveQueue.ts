@@ -5,7 +5,7 @@ import {
 } from "@azure/service-bus";
 import dotenv from "dotenv";
 import { Stream } from "stream";
-import Promotion from "../models/Promotion";
+import Promotion, { isPromotion } from "../models/Promotion";
 
 dotenv.config();
 const connectionString = process.env
@@ -26,7 +26,17 @@ export function receiveQueue(
   const myMessageHandler = async (
     messageReceived: ServiceBusReceivedMessage
   ) => {
-    promotionStream.emit("data", messageReceived.body.data);
+    let promotion: Promotion = messageReceived.body.data;
+    try {
+      isPromotion(promotion);
+      promotionStream.emit("data", promotion);
+    } catch (error) {
+      await receiver.deadLetterMessage(messageReceived, {
+        deadLetterReason: "Invalid promotion",
+        deadLetterErrorDescription: error as string,
+      });
+      console.error(error);
+    }
   };
 
   const myErrorHandler = async (error: ProcessErrorArgs) => {
