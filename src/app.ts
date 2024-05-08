@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import axios from "axios";
 import Promotion from "./models/promotionModel";
 import { json } from "stream/consumers";
+import { receiveQueue } from "./services/receiveQueue";
 
 const app: Express = express();
 const port = 8080;
@@ -11,6 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 
 dotenv.config();
 const emailApiUrl = process.env.EMAIL_API_URL as string;
+
+receiveQueue();
 
 app.post("/promotion", async (req: Request, res: Response) => {
   const promotion: Promotion = req.body;
