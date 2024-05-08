@@ -1,7 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import axios from "axios";
-import Promotion from "./models/promotionModel";
+import Promotion from "./models/Promotion";
 import { receiveQueue } from "./services/receiveQueue";
 import { Stream } from "stream";
 
