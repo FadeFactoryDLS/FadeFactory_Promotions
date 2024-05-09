@@ -19,10 +19,12 @@ jobs:
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: '20.x'
+          node-version: "20.x"
 
       - name: npm install, build, and test
         run: |
+          touch .env
+          echo ${{ secrets.DOTENV_BASE64_ENCODED }} | base64 --decode >> .env
           npm install
           npm run build --if-present
           npm run test --if-present
@@ -40,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
+      name: "Production"
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
@@ -53,7 +55,12 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
+
+      - name: Create dotenv
+        run: |
+          touch .env
+          echo ${{ secrets.DOTENV_BASE64_ENCODED }} | base64 --decode >> .env
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -61,11 +68,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_9CFD3E5016FE4F4CA9BA99006B48F912 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_008DE5279F2343DEB9981331A423D24F }}
 
-      - name: 'Deploy to Azure Web App'
+      - name: "Deploy to Azure Web App"
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'FadeFactoryPromotions'
-          slot-name: 'Production'
+          app-name: "FadeFactoryPromotions"
+          slot-name: "Production"
           package: .
-          
