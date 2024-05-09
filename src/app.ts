@@ -21,6 +21,10 @@ receiveQueue(function (err: any, promotionStream: Stream) {
               message: promotion.promotionDescription,
             },
             {
+              auth: {
+                username: process.env.SIMPLE_LOGIN_USERNAME as string,
+                password: process.env.SIMPLE_LOGIN_PASSWORD as string,
+              },
               headers: {
                 "Content-Type": "application/json",
               },
