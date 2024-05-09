@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import axios from "axios";
-import Promotion from "./models/Promotion";
-import { receiveQueue } from "./services/receiveQueue";
+import Promotion from "./models/Promotion.js";
+import { receiveQueue } from "./services/receiveQueue.js";
 import { Stream } from "stream";
 
 dotenv.config();

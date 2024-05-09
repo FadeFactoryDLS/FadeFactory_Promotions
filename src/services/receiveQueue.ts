@@ -5,7 +5,7 @@ import {
 } from "@azure/service-bus";
 import dotenv from "dotenv";
 import { Stream } from "stream";
-import Promotion, { isPromotion } from "../models/Promotion";
+import Promotion, { isPromotion } from "../models/Promotion.js";
 
 dotenv.config();
 const connectionString = process.env
