@@ -12,6 +12,30 @@ Expand unit tests
 
 Terraform infrastructure as code
 
+# Usage and integration
+
+The web app watches for messages in the supplied message queue. Message are expected to be JSON in the following format:
+```json
+{
+    "data": {
+        "promotionId": 1,
+        "promotionSubject": "HUGE Sale",
+        "promotionDescription": "50% off on your next haircut (fades only)",
+        "promotionReceivers": [
+            {
+                "name": "name1",
+                "email": "name1@host.com"
+            },
+            {
+                "name": "name2",
+                "email": "name2@host.com"
+            }
+        ]
+    }
+}
+```
+If an invalid message is submitted to the message queue the web app will move it to the dead letter queue with the accompanying error code attached.
+
 # Hosting
 
 A Linux Web App is running at: https://fadefactorypromotions.azurewebsites.net/
@@ -30,7 +54,7 @@ The project is very straight forward to run in a local environment
 
 First set up a local .env file following the format of env_template, then run:
 
-```
+```bash
 $ npm install
 $ npm run <package.json script>
 ```
